@@ -1,16 +1,10 @@
 "use client"
 
 import { useRouter } from 'next/navigation';
-import { Dumbbell, Activity, LogOut, ArrowRight, Plus, Heart } from 'lucide-react';
+import { Dumbbell, ArrowRight, Plus, Heart } from 'lucide-react';
 
 export default function Dashboard() {
   const router = useRouter();
-
-  const handleLogout = () => {
-    // Clear the auth cookie
-    document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-    router.push('/login');
-  };
 
   const modules = [
     {
@@ -37,20 +31,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center sticky top-0 z-10">
-        <h1 className="text-xl font-bold text-gray-800 tracking-tight">
-          Master App
-        </h1>
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 transition-colors"
-        >
-          <LogOut size={18} />
-          <span className="hidden sm:inline">Sign Out</span>
-        </button>
-      </header>
-
       {/* Main Content */}
       <main className="flex-1 max-w-5xl mx-auto w-full p-6 md:p-8">
         <div className="mb-8">
@@ -62,14 +42,15 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {modules.map((module) => (
-            <div 
+            <button
               key={module.id}
               onClick={() => module.active && router.push(module.link)}
+              disabled={!module.active}
               className={`
                 group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm 
-                transition-all duration-300 ease-in-out
+                transition-all duration-300 ease-in-out text-left
                 ${module.active 
-                  ? 'hover:shadow-xl hover:-translate-y-1 cursor-pointer' 
+                  ? 'hover:shadow-xl hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500' 
                   : 'opacity-60 cursor-not-allowed grayscale-[0.5]'
                 }
               `}
@@ -104,7 +85,7 @@ export default function Dashboard() {
                   </div>
                 )}
               </div>
-            </div>
+            </button>
           ))}
 
           {/* Add New Module Placeholder */}
