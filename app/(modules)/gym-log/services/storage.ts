@@ -2,7 +2,7 @@ import type { WorkoutLog } from '../types';
 
 /**
  * Storage service interface for workout logs
- * Currently uses localStorage, but can be easily swapped for a database
+ * Now uses MongoDB database via API routes
  */
 export interface WorkoutStorage {
   getAll(): Promise<WorkoutLog[]>;
@@ -13,61 +13,80 @@ export interface WorkoutStorage {
 }
 
 /**
- * LocalStorage implementation
- * In the future, replace this with a database service
+ * Database service implementation
+ * Uses API routes to interact with MongoDB
  */
-class LocalStorageService implements WorkoutStorage {
-  private readonly key = 'gym-workouts';
+class DatabaseService implements WorkoutStorage {
+  private readonly baseUrl = '/api/gym-log/workouts';
 
   async getAll(): Promise<WorkoutLog[]> {
-    if (typeof window === 'undefined') return [];
-    
     try {
-      const item = window.localStorage.getItem(this.key);
-      return item ? JSON.parse(item) : [];
+      const response = await fetch(this.baseUrl);
+      if (!response.ok) throw new Error('Failed to fetch workouts');
+      return await response.json();
     } catch (error) {
-      console.error('Error loading workouts from localStorage:', error);
+      console.error('Error loading workouts:', error);
       return [];
     }
   }
 
   async getById(id: string): Promise<WorkoutLog | null> {
-    const workouts = await this.getAll();
-    return workouts.find(w => w.id === id) || null;
+    try {
+      const response = await fetch(`${this.baseUrl}/${id}`);
+      if (!response.ok) {
+        if (response.status === 404) return null;
+        throw new Error('Failed to fetch workout');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error loading workout:', error);
+      return null;
+    }
   }
 
   async create(workout: WorkoutLog): Promise<WorkoutLog> {
-    const workouts = await this.getAll();
-    const updated = [workout, ...workouts];
-    await this.save(updated);
-    return workout;
+    try {
+      const response = await fetch(this.baseUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(workout),
+      });
+      if (!response.ok) throw new Error('Failed to create workout');
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating workout:', error);
+      throw error;
+    }
   }
 
   async update(workout: WorkoutLog): Promise<WorkoutLog> {
-    const workouts = await this.getAll();
-    const updated = workouts.map(w => w.id === workout.id ? workout : w);
-    await this.save(updated);
-    return workout;
+    try {
+      const response = await fetch(`${this.baseUrl}/${workout.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(workout),
+      });
+      if (!response.ok) throw new Error('Failed to update workout');
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating workout:', error);
+      throw error;
+    }
   }
 
   async delete(id: string): Promise<void> {
-    const workouts = await this.getAll();
-    const updated = workouts.filter(w => w.id !== id);
-    await this.save(updated);
-  }
-
-  private async save(workouts: WorkoutLog[]): Promise<void> {
-    if (typeof window === 'undefined') return;
-    
     try {
-      window.localStorage.setItem(this.key, JSON.stringify(workouts));
+      const response = await fetch(`${this.baseUrl}/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete workout');
     } catch (error) {
-      console.error('Error saving workouts to localStorage:', error);
+      console.error('Error deleting workout:', error);
       throw error;
     }
   }
 }
 
 // Export singleton instance
-export const workoutStorage: WorkoutStorage = new LocalStorageService();
+export const workoutStorage: WorkoutStorage = new DatabaseService();
 

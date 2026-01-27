@@ -2,7 +2,8 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { LogOut, Home } from 'lucide-react';
+import { Home } from 'lucide-react';
+import UserMenu from './UserMenu';
 
 // Module title mapping
 const moduleTitles: Record<string, { title: string; subtitle?: string }> = {
@@ -15,6 +16,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
 
   // Check if user is logged in
   useEffect(() => {
@@ -29,6 +31,7 @@ export default function Navbar() {
         setIsLoggedIn(tokenValue === 'valid_token');
       } else {
         setIsLoggedIn(false);
+        setUsername(null);
       }
     };
 
@@ -38,11 +41,26 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, [pathname]);
 
-  const handleLogout = () => {
-    document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-    setIsLoggedIn(false);
-    router.push('/login');
-  };
+  // Fetch username when logged in
+  useEffect(() => {
+    if (isLoggedIn && !username) {
+      const fetchUsername = async () => {
+        try {
+          const response = await fetch('/api/auth/me');
+          if (response.ok) {
+            const data = await response.json();
+            setUsername(data.user?.username || null);
+          }
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+      };
+      fetchUsername();
+    } else if (!isLoggedIn) {
+      setUsername(null);
+    }
+  }, [isLoggedIn, username]);
+
 
   const handleHome = () => {
     router.push('/');
@@ -59,32 +77,37 @@ export default function Navbar() {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          {isLoggedIn && !isHomePage && (
-            <button
-              onClick={handleHome}
-              className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-              aria-label="Go to home"
-            >
-              <Home size={20} />
-            </button>
-          )}
-          <div>
-            <h1 className="text-xl font-bold text-gray-900 leading-tight">{title}</h1>
-            {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Left Section - Title & Navigation */}
+          <div className="flex items-center gap-4">
+            {isLoggedIn && !isHomePage && (
+              <button
+                onClick={handleHome}
+                className="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Go to home"
+              >
+                <Home size={20} />
+              </button>
+            )}
+            <div className="flex flex-col">
+              <h1 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
+                {title}
+              </h1>
+              {subtitle && (
+                <p className="text-xs text-gray-500 mt-0.5 hidden sm:block">
+                  {subtitle}
+                </p>
+              )}
+            </div>
           </div>
+
+          {/* Right Section - User Menu */}
+          {isLoggedIn && username && (
+            <UserMenu username={username} />
+          )}
         </div>
-        {isLoggedIn && (
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 transition-colors"
-          >
-            <LogOut size={18} />
-            <span className="hidden sm:inline">Sign Out</span>
-          </button>
-        )}
       </div>
     </header>
   );

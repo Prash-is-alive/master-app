@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dumbbell, Lock, User, ArrowRight } from 'lucide-react';
+import { login } from '@/lib/api/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,20 +17,19 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
-    // --- DEMO AUTHENTICATION LOGIC ---
-    // In a real app, you would send this to an API endpoint.
-    // For this demo, we check hardcoded credentials.
-    
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+    try {
+      const result = await login({ username, password });
 
-    if (username === 'prashant' && password === 'prashant') {
-      // Set a cookie that the middleware can read
-      // max-age=86400 sets it for 1 day
-      document.cookie = "auth_token=valid_token; path=/; max-age=86400; SameSite=Strict";
-      router.push('/'); // Redirect to the main dashboard
-    } else {
-      setError('Invalid username or password');
+      if (result.success && result.user) {
+        // Redirect to dashboard on successful login
+        router.push('/');
+      } else {
+        setError(result.error || 'Invalid username or password');
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
       setIsLoading(false);
     }
   };
@@ -60,12 +60,13 @@ export default function LoginPage() {
 
             {/* Username Input */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 block">Username</label>
+              <label htmlFor="username" className="text-sm font-semibold text-gray-700 block">Username</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User size={18} className="text-gray-400" />
                 </div>
                 <input
+                  id="username"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -78,12 +79,13 @@ export default function LoginPage() {
 
             {/* Password Input */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 block">Password</label>
+              <label htmlFor="password" className="text-sm font-semibold text-gray-700 block">Password</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock size={18} className="text-gray-400" />
                 </div>
                 <input
+                  id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

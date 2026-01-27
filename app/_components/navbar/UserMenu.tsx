@@ -1,0 +1,110 @@
+"use client"
+
+import React, { useState, useRef, useEffect } from 'react';
+import { LogOut, Key, User, ChevronDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import ChangePasswordModal from './ChangePasswordModal';
+
+interface UserMenuProps {
+  readonly username: string;
+}
+
+export default function UserMenu({ username }: UserMenuProps) {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleLogout = () => {
+    // Clear all auth cookies
+    document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    document.cookie = "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    router.push('/login');
+  };
+
+  const handleChangePassword = () => {
+    setIsOpen(false);
+    setIsPasswordModalOpen(true);
+  };
+
+  return (
+    <div className="relative" ref={menuRef}>
+      {/* User Badge - Clickable */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        onMouseEnter={() => setIsOpen(true)}
+        className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
+      >
+        <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
+          <User size={14} className="text-blue-600" />
+        </div>
+        <span className="text-sm font-medium text-gray-700 hidden sm:inline">
+          {username}
+        </span>
+        <ChevronDown 
+          size={14} 
+          className={`text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div
+          className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50"
+          onMouseLeave={() => setIsOpen(false)}
+          role="menu"
+          tabIndex={-1}
+        >
+          {/* User Info Header */}
+          <div className="px-4 py-2 border-b border-gray-100">
+            <p className="text-xs text-gray-500 mb-0.5">Signed in as</p>
+            <p className="text-sm font-semibold text-gray-900">{username}</p>
+          </div>
+
+          {/* Menu Items */}
+          <button
+            onClick={handleChangePassword}
+            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <Key size={16} className="text-gray-500" />
+            <span>Change Password</span>
+          </button>
+
+          <div className="border-t border-gray-100 my-1" />
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+          >
+            <LogOut size={16} />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      )}
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal 
+        isOpen={isPasswordModalOpen} 
+        onClose={() => setIsPasswordModalOpen(false)} 
+      />
+    </div>
+  );
+}
+

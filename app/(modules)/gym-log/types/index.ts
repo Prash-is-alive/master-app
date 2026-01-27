@@ -13,6 +13,7 @@ export interface Exercise {
 
 export interface WorkoutLog {
   id: string;
+  userId?: string; // User ID - workouts are user-specific
   date: string;
   day: string;
   exercises: Exercise[];
