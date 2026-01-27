@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 require('dotenv').config({ path: '.env.local' });
 
-const uri = process.env.VERCEL_MONGODB_URI;
+const uri = process.env.MONGODB_URI;
 
 async function createSampleUser() {
   const client = new MongoClient(uri);

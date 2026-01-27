@@ -32,7 +32,7 @@ export class BaseService<T extends { _id?: string | ObjectId }> {
   /**
    * Find a single document by filter
    */
-  async findOne(filter: Filter<T>, options?: FindOptions<T>): Promise<T | null> {
+  async findOne(filter: Filter<T>, options?: FindOptions): Promise<T | null> {
     try {
       const collection = await this.getCollection();
       const result = await collection.findOne(filter, options);
@@ -48,7 +48,7 @@ export class BaseService<T extends { _id?: string | ObjectId }> {
    */
   async findMany(
     filter: Filter<T> = {},
-    options?: FindOptions<T>
+    options?: FindOptions
   ): Promise<T[]> {
     try {
       const collection = await this.getCollection();
@@ -126,9 +126,17 @@ export class BaseService<T extends { _id?: string | ObjectId }> {
   ): Promise<T | null> {
     try {
       const collection = await this.getCollection();
+      const updateFilter: UpdateFilter<T> = {
+        ...update,
+        $set: {
+          ...(update as any).$set,
+          updatedAt: new Date(),
+        },
+      } as UpdateFilter<T>;
+      
       const result = await collection.findOneAndUpdate(
         filter,
-        { $set: { ...update, updatedAt: new Date() } },
+        updateFilter,
         { returnDocument: 'after' }
       );
 

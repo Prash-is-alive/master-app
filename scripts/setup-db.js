@@ -10,7 +10,7 @@
 const { MongoClient } = require('mongodb');
 require('dotenv').config({ path: '.env.local' });
 
-const uri = process.env.VERCEL_MONGODB_URI;
+const uri = process.env.MONGODB_URI;
 
 async function setupDatabase() {
   const client = new MongoClient(uri);
