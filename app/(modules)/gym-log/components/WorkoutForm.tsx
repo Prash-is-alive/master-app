@@ -29,14 +29,18 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
   };
 
   const draft = loadDraft();
+  // Reverse exercises when editing existing workout so they appear newest-first in the form
+  const initialExercises = workout?.exercises 
+    ? [...workout.exercises].reverse() 
+    : (draft?.exercises || []);
   const [date, setDate] = useState(workout?.date || draft?.date || new Date().toISOString().split('T')[0]);
   const [day, setDay] = useState(workout?.day || draft?.day || '');
-  const [exercises, setExercises] = useState<Exercise[]>(workout?.exercises || draft?.exercises || []);
+  const [exercises, setExercises] = useState<Exercise[]>(initialExercises);
 
   const addExercise = () => {
     setExercises([
-      ...exercises,
-      { id: generateId(), name: '', sets: [{ id: generateId(), weight: 0, reps: 0 }], notes: '' }
+      { id: generateId(), name: '', sets: [{ id: generateId(), weight: 0, reps: 0 }], notes: '' },
+      ...exercises
     ]);
   };
 
@@ -123,11 +127,12 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
       return;
     }
     const validExercises = exercises.filter(ex => ex.name.trim());
+    // Reverse exercises array so they appear in the order they were added when displayed
     onSave({
       id: workout?.id || generateId(),
       date,
       day: day.trim(),
-      exercises: validExercises
+      exercises: [...validExercises].reverse()
     });
     clearDraft(); // Clear draft after successful save
     onClose();
