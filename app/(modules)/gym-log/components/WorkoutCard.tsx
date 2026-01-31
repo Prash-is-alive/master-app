@@ -15,16 +15,16 @@ interface WorkoutCardProps {
 export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: WorkoutCardProps) {
   return (
     <div 
-      className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-[#111111] rounded-xl border border-[#333333] p-5 hover:bg-[#1a1a1a] hover:border-[#404040] transition-all cursor-pointer"
       onClick={onClick}
     >
       <div className="flex justify-between items-start mb-4">
         <div>
-          <div className="flex items-center gap-2 text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">
+          <div className="flex items-center gap-2 text-gray-400 text-xs font-medium uppercase tracking-wide mb-1">
             <Calendar size={14} />
             <span>{formatDate(workout.date)}</span>
           </div>
-          <h3 className="text-lg font-bold text-gray-900 capitalize">{workout.day}</h3>
+          <h3 className="text-lg font-bold text-[#ededed] capitalize">{workout.day}</h3>
         </div>
         <div className="flex gap-1">
           <button
@@ -32,7 +32,7 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: Work
               e.stopPropagation();
               onEdit();
             }}
-            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-2 text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
             aria-label="Edit"
           >
             <Edit2 size={18} />
@@ -42,7 +42,7 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: Work
               e.stopPropagation();
               onDelete();
             }}
-            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
             aria-label="Delete"
           >
             <Trash2 size={18} />
@@ -54,16 +54,16 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: Work
         {workout.exercises.map((exercise) => (
           <div key={exercise.id}>
             <div className="flex justify-between items-baseline mb-2">
-              <h4 className="font-semibold text-gray-800 text-sm capitalize">{exercise.name}</h4>
+              <h4 className="font-semibold text-[#ededed] text-sm capitalize">{exercise.name}</h4>
               {exercise.notes && (
-                <span className="text-xs text-gray-400 italic truncate max-w-[150px]">{exercise.notes}</span>
+                <span className="text-xs text-gray-500 italic truncate max-w-[150px]">{exercise.notes}</span>
               )}
             </div>
             <div className="flex flex-wrap gap-2">
               {exercise.sets.map((set) => (
                 <span
                   key={set.id}
-                  className="inline-flex items-center px-2.5 py-1 bg-gray-100 border border-gray-200 text-gray-700 rounded-md text-xs font-medium tabular-nums"
+                  className="inline-flex items-center px-2.5 py-1 bg-[#1a1a1a] border border-[#333333] text-[#ededed] rounded-md text-xs font-medium tabular-nums"
                 >
                   {set.weight > 0 ? `${set.weight}kg` : 'BW'} × {set.reps}
                 </span>

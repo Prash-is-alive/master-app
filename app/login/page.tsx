@@ -35,8 +35,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <div className="bg-[#111111] w-full max-w-md rounded-2xl overflow-hidden border border-[#333333]">
         
         {/* Header Section */}
         <div className="bg-blue-600 p-8 text-center">
@@ -53,14 +53,14 @@ export default function LoginPage() {
             
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg border border-red-100 flex items-center justify-center">
+              <div className="bg-red-500/10 text-red-400 text-sm p-3 rounded-lg border border-red-500/20 flex items-center justify-center">
                 {error}
               </div>
             )}
 
             {/* Username Input */}
             <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-semibold text-gray-700 block">Username</label>
+              <label htmlFor="username" className="text-sm font-semibold text-[#ededed] block">Username</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <User size={18} className="text-gray-400" />
@@ -71,7 +71,7 @@ export default function LoginPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Enter your username"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none"
+                  className="w-full pl-10 pr-4 py-3 border border-[#333333] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500 transition-all outline-none"
                   required
                 />
               </div>
@@ -79,7 +79,7 @@ export default function LoginPage() {
 
             {/* Password Input */}
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-semibold text-gray-700 block">Password</label>
+              <label htmlFor="password" className="text-sm font-semibold text-[#ededed] block">Password</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock size={18} className="text-gray-400" />
@@ -90,7 +90,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none"
+                  className="w-full pl-10 pr-4 py-3 border border-[#333333] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500 transition-all outline-none"
                   required
                 />
               </div>
@@ -100,7 +100,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span>Signing in...</span>

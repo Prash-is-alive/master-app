@@ -30,12 +30,12 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-black flex flex-col">
       {/* Main Content */}
       <main className="flex-1 max-w-5xl mx-auto w-full p-6 md:p-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
-          <p className="text-gray-500 mt-1">Select a module to get started.</p>
+          <h2 className="text-3xl font-bold text-[#ededed]">Welcome Back</h2>
+          <p className="text-gray-400 mt-1">Select a module to get started.</p>
         </div>
 
         {/* Modules Grid */}
@@ -47,27 +47,27 @@ export default function Dashboard() {
               onClick={() => module.active && router.push(module.link)}
               disabled={!module.active}
               className={`
-                group relative bg-white rounded-2xl p-6 border border-gray-100 shadow-sm 
+                group relative bg-[#111111] rounded-2xl p-6 border border-[#333333] 
                 transition-all duration-300 ease-in-out text-left
                 ${module.active 
-                  ? 'hover:shadow-xl hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500' 
+                  ? 'hover:bg-[#1a1a1a] hover:border-[#404040] hover:-translate-y-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500' 
                   : 'opacity-60 cursor-not-allowed grayscale-[0.5]'
                 }
               `}
             >
               {/* Icon Box */}
               <div className={`
-                w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-sm
+                w-12 h-12 rounded-xl flex items-center justify-center mb-4
                 ${module.color} transition-transform group-hover:scale-110
               `}>
                 {module.icon}
               </div>
 
               {/* Text Content */}
-              <h3 className={`text-xl font-bold text-gray-900 mb-2 ${module.active ? module.hoverColor : ''} transition-colors`}>
+              <h3 className={`text-xl font-bold text-[#ededed] mb-2 ${module.active ? module.hoverColor : ''} transition-colors`}>
                 {module.title}
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-6">
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
                 {module.description}
               </p>
 
@@ -75,13 +75,13 @@ export default function Dashboard() {
               <div className="flex items-center justify-between mt-auto">
                 <span className={`
                   text-xs font-bold uppercase tracking-wider 
-                  ${module.active ? 'text-gray-400 group-hover:text-gray-900' : 'text-gray-300'}
+                  ${module.active ? 'text-gray-500 group-hover:text-[#ededed]' : 'text-gray-600'}
                 `}>
                   {module.active ? 'Open Module' : 'Coming Soon'}
                 </span>
                 {module.active && (
-                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-gray-100 transition-colors">
-                    <ArrowRight size={16} className="text-gray-400 group-hover:text-gray-900" />
+                  <div className="w-8 h-8 rounded-full bg-[#1a1a1a] flex items-center justify-center group-hover:bg-[#262626] transition-colors">
+                    <ArrowRight size={16} className="text-gray-500 group-hover:text-[#ededed]" />
                   </div>
                 )}
               </div>
@@ -89,8 +89,8 @@ export default function Dashboard() {
           ))}
 
           {/* Add New Module Placeholder */}
-          <button className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center text-gray-400 hover:border-gray-300 hover:text-gray-500 hover:bg-gray-50/50 transition-all min-h-[240px]">
-            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+          <button className="border-2 border-dashed border-[#333333] rounded-2xl p-6 flex flex-col items-center justify-center text-center text-gray-500 hover:border-[#404040] hover:text-gray-400 hover:bg-[#111111] transition-all min-h-[240px]">
+            <div className="w-12 h-12 rounded-full bg-[#1a1a1a] flex items-center justify-center mb-3">
               <Plus size={24} />
             </div>
             <span className="font-semibold">Add Module</span>

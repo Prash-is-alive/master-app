@@ -115,14 +115,14 @@ export default function GymLogPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-gray-400">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-black pb-20">
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 py-8">
         {sortedWorkouts.length === 0 ? (

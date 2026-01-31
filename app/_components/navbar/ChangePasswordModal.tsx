@@ -101,26 +101,26 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
 
   return (
     <div 
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50"
       onClick={handleClose}
     >
       <div 
-        className="bg-white rounded-xl w-full max-w-md shadow-2xl"
+        className="bg-[#111111] rounded-xl w-full max-w-md shadow-2xl border border-[#333333]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div className="px-6 py-4 border-b border-[#333333] flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-              <Lock size={20} className="text-blue-600" />
+            <div className="w-10 h-10 rounded-full bg-blue-600/20 flex items-center justify-center">
+              <Lock size={20} className="text-blue-400" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">Change Password</h2>
+            <h2 className="text-xl font-bold text-[#ededed]">Change Password</h2>
           </div>
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setShowPasswords(!showPasswords)}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 text-gray-400 hover:text-[#ededed] hover:bg-[#1a1a1a] rounded-lg transition-colors"
               aria-label={showPasswords ? 'Hide passwords' : 'Show passwords'}
               disabled={isLoading}
             >
@@ -130,7 +130,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               type="button" 
               onClick={handleClose}
               disabled={isLoading}
-              className="p-2 -mr-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 -mr-2 text-gray-400 hover:text-[#ededed] hover:bg-[#1a1a1a] rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <X size={24} />
             </button>
@@ -141,14 +141,14 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg border border-red-100">
+            <div className="bg-red-500/10 text-red-400 text-sm p-3 rounded-lg border border-red-500/20">
               {error}
             </div>
           )}
 
           {/* Old Password */}
           <div>
-            <label htmlFor="oldPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+            <label htmlFor="oldPassword" className="block text-sm font-semibold text-[#ededed] mb-2">
               Current Password
             </label>
             <div className="relative">
@@ -159,7 +159,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
                 onChange={(e) => setOldPassword(e.target.value)}
                 placeholder="Enter current password"
                 disabled={isLoading}
-                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full pl-4 pr-4 py-3 border border-[#333333] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
               />
             </div>
@@ -167,7 +167,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
 
           {/* New Password */}
           <div>
-            <label htmlFor="newPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+            <label htmlFor="newPassword" className="block text-sm font-semibold text-[#ededed] mb-2">
               New Password
             </label>
             <div className="relative">
@@ -178,16 +178,16 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
                 disabled={isLoading}
-                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full pl-4 pr-4 py-3 border border-[#333333] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
               />
             </div>
-            <p className="text-xs text-gray-500 mt-1">Must be at least 6 characters</p>
+            <p className="text-xs text-gray-400 mt-1">Must be at least 6 characters</p>
           </div>
 
           {/* Confirm Password */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+            <label htmlFor="confirmPassword" className="block text-sm font-semibold text-[#ededed] mb-2">
               Confirm New Password
             </label>
             <div className="relative">
@@ -198,7 +198,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
                 disabled={isLoading}
-                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full pl-4 pr-4 py-3 border border-[#333333] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
               />
             </div>
@@ -210,7 +210,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2.5 text-sm font-semibold text-[#ededed] bg-[#1a1a1a] hover:bg-[#262626] rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
