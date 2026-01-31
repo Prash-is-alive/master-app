@@ -24,3 +24,19 @@ body {
 button {
   cursor: pointer;
 }
+
+/* Fix date input overflow on iOS */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  max-width: 100%;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Ensure inputs don't overflow containers */
+input {
+  max-width: 100%;
+  box-sizing: border-box;
+}

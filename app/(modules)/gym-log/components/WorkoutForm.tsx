@@ -165,27 +165,28 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 bg-[#111111]">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 bg-[#111111] overflow-x-hidden">
         {/* Date & Title Inputs */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
+          <div className="min-w-0">
             <label className="block text-sm font-semibold text-[#ededed] mb-1">Date</label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-4 py-3 border border-[#333333] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed]"
+              className="w-full min-w-0 px-4 py-3 border border-[#333333] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] box-border"
+              style={{ WebkitAppearance: 'none', appearance: 'none' }}
               required
             />
           </div>
-          <div>
+          <div className="min-w-0">
             <label className="block text-sm font-semibold text-[#ededed] mb-1">Focus (e.g., Pull Day)</label>
             <input
               type="text"
               value={day}
               onChange={(e) => setDay(e.target.value)}
               placeholder="Enter workout focus..."
-              className="w-full px-4 py-3 border border-[#333333] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500"
+              className="w-full min-w-0 px-4 py-3 border border-[#333333] rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500 box-border"
               required
             />
           </div>
