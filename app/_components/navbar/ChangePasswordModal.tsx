@@ -14,9 +14,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPasswords, setShowPasswords] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -118,14 +116,25 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
             </div>
             <h2 className="text-xl font-bold text-gray-900">Change Password</h2>
           </div>
-          <button 
-            type="button" 
-            onClick={handleClose}
-            disabled={isLoading}
-            className="p-2 -mr-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <X size={24} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setShowPasswords(!showPasswords)}
+              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label={showPasswords ? 'Hide passwords' : 'Show passwords'}
+              disabled={isLoading}
+            >
+              {showPasswords ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+            <button 
+              type="button" 
+              onClick={handleClose}
+              disabled={isLoading}
+              className="p-2 -mr-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <X size={24} />
+            </button>
+          </div>
         </div>
 
         {/* Form */}
@@ -144,24 +153,15 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
             </label>
             <div className="relative">
               <input
-                type={showOldPassword ? 'text' : 'password'}
+                type={showPasswords ? 'text' : 'password'}
                 id="oldPassword"
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
                 placeholder="Enter current password"
                 disabled={isLoading}
-                className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowOldPassword(!showOldPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                tabIndex={-1}
-                aria-label={showOldPassword ? 'Hide password' : 'Show password'}
-              >
-                {showOldPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
             </div>
           </div>
 
@@ -172,24 +172,15 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
             </label>
             <div className="relative">
               <input
-                type={showNewPassword ? 'text' : 'password'}
+                type={showPasswords ? 'text' : 'password'}
                 id="newPassword"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Enter new password"
                 disabled={isLoading}
-                className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                tabIndex={-1}
-                aria-label={showNewPassword ? 'Hide password' : 'Show password'}
-              >
-                {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
             </div>
             <p className="text-xs text-gray-500 mt-1">Must be at least 6 characters</p>
           </div>
@@ -201,24 +192,15 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
             </label>
             <div className="relative">
               <input
-                type={showConfirmPassword ? 'text' : 'password'}
+                type={showPasswords ? 'text' : 'password'}
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirm new password"
                 disabled={isLoading}
-                className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400 transition-all outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                tabIndex={-1}
-                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-              >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
             </div>
           </div>
 
