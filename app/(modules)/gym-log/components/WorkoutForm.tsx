@@ -1,9 +1,11 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, X, Save } from 'lucide-react';
 import type { WorkoutLog, Exercise } from '../types';
 import { generateId } from '../utils';
+
+const DRAFT_STORAGE_KEY = 'gym-log-workout-draft';
 
 interface WorkoutFormProps {
   workout?: WorkoutLog;
@@ -12,9 +14,24 @@ interface WorkoutFormProps {
 }
 
 export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormProps) {
-  const [date, setDate] = useState(workout?.date || new Date().toISOString().split('T')[0]);
-  const [day, setDay] = useState(workout?.day || '');
-  const [exercises, setExercises] = useState<Exercise[]>(workout?.exercises || []);
+  // Load draft from localStorage only for new workouts (not editing)
+  const loadDraft = (): { date: string; day: string; exercises: Exercise[] } | null => {
+    if (workout) return null; // Don't load draft when editing existing workout
+    try {
+      const draft = globalThis.localStorage?.getItem(DRAFT_STORAGE_KEY);
+      if (draft) {
+        return JSON.parse(draft);
+      }
+    } catch (error) {
+      console.error('Failed to load draft from localStorage:', error);
+    }
+    return null;
+  };
+
+  const draft = loadDraft();
+  const [date, setDate] = useState(workout?.date || draft?.date || new Date().toISOString().split('T')[0]);
+  const [day, setDay] = useState(workout?.day || draft?.day || '');
+  const [exercises, setExercises] = useState<Exercise[]>(workout?.exercises || draft?.exercises || []);
 
   const addExercise = () => {
     setExercises([
@@ -68,6 +85,38 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
     ));
   };
 
+  // Auto-save to localStorage (only for new workouts, not editing)
+  useEffect(() => {
+    if (workout) return; // Don't auto-save when editing existing workout
+
+    try {
+      const draft = {
+        date,
+        day,
+        exercises
+      };
+      globalThis.localStorage?.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+    } catch (error) {
+      console.error('Failed to save draft to localStorage:', error);
+    }
+  }, [date, day, exercises, workout]);
+
+  const clearDraft = () => {
+    try {
+      globalThis.localStorage?.removeItem(DRAFT_STORAGE_KEY);
+    } catch (error) {
+      console.error('Failed to clear draft from localStorage:', error);
+    }
+  };
+
+  const handleDiscard = () => {
+    clearDraft();
+    setDate(new Date().toISOString().split('T')[0]);
+    setDay('');
+    setExercises([]);
+    onClose();
+  };
+
   const handleSubmit = () => {
     if (!day.trim() || exercises.length === 0) {
       alert('Please fill in the day and add at least one exercise');
@@ -80,6 +129,7 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
       day: day.trim(),
       exercises: validExercises
     });
+    clearDraft(); // Clear draft after successful save
     onClose();
   };
 
@@ -90,13 +140,23 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
         <h2 className="text-xl md:text-2xl font-bold text-gray-900">
           {workout ? 'Edit Workout' : 'Log Workout'}
         </h2>
-        <button 
-          type="button" 
-          onClick={onClose} 
-          className="p-2 -mr-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
-        >
-          <X size={24} />
-        </button>
+        <div className="flex gap-1 items-center">
+          <button
+            type="button"
+            onClick={handleDiscard}
+            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            aria-label="Discard"
+          >
+            <Trash2 size={18} />
+          </button>
+          <button 
+            type="button" 
+            onClick={onClose} 
+            className="p-2 -mr-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <X size={18} />
+          </button>
+        </div>
       </div>
 
       {/* Scrollable Content */}
@@ -256,18 +316,11 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
       </div>
 
       {/* Sticky Footer */}
-      <div className="p-4 border-t border-gray-100 bg-gray-50 flex gap-3 shrink-0 rounded-b-xl">
-        <button
-          type="button"
-          onClick={onClose}
-          className="flex-1 px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-semibold transition-colors"
-        >
-          Cancel
-        </button>
+      <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end shrink-0 rounded-b-xl">
         <button
           type="button"
           onClick={handleSubmit}
-          className="flex-[2] flex justify-center items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold shadow-sm transition-all active:scale-[0.98]"
+          className="flex justify-center items-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold shadow-sm transition-all active:scale-[0.98]"
         >
           <Save size={18} />
           Save Workout
