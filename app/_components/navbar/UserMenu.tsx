@@ -49,7 +49,6 @@ export default function UserMenu({ username }: UserMenuProps) {
       {/* User Badge - Clickable */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        onMouseEnter={() => setIsOpen(true)}
         className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
       >
         <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center">
@@ -68,7 +67,6 @@ export default function UserMenu({ username }: UserMenuProps) {
       {isOpen && (
         <div
           className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50"
-          onMouseLeave={() => setIsOpen(false)}
           role="menu"
           tabIndex={-1}
         >
