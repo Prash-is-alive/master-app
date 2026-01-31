@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useWorkouts } from './hooks/useWorkouts';
 import Modal from './components/Modal';
 import WorkoutForm from './components/WorkoutForm';
+import WorkoutPreview from './components/WorkoutPreview';
 import WorkoutCard from './components/WorkoutCard';
 import EmptyState from './components/EmptyState';
 import FloatingActionButton from './components/FloatingActionButton';
@@ -13,6 +14,8 @@ export default function GymLogPage() {
   const { workouts, addWorkout, updateWorkout, deleteWorkout, isLoading } = useWorkouts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingWorkout, setEditingWorkout] = useState<WorkoutLog | undefined>(undefined);
+  const [previewWorkout, setPreviewWorkout] = useState<WorkoutLog | undefined>(undefined);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const sortedWorkouts = useMemo(() => {
     return [...workouts].sort((a, b) =>
@@ -34,13 +37,31 @@ export default function GymLogPage() {
     }
   };
 
+  const handlePreviewWorkout = (workout: WorkoutLog) => {
+    setPreviewWorkout(workout);
+    setIsEditMode(false);
+    setIsModalOpen(true);
+  };
+
   const handleEditWorkout = (workout: WorkoutLog) => {
     setEditingWorkout(workout);
+    setPreviewWorkout(undefined);
+    setIsEditMode(true);
     setIsModalOpen(true);
+  };
+
+  const handleEditFromPreview = () => {
+    if (previewWorkout) {
+      setEditingWorkout(previewWorkout);
+      setPreviewWorkout(undefined);
+      setIsEditMode(true);
+    }
   };
 
   const handleAddNew = () => {
     setEditingWorkout(undefined);
+    setPreviewWorkout(undefined);
+    setIsEditMode(true);
     setIsModalOpen(true);
   };
 
@@ -48,6 +69,7 @@ export default function GymLogPage() {
     if (window.confirm('Delete this workout log?')) {
       try {
         await deleteWorkout(id);
+        handleCloseModal();
       } catch (error) {
         console.error('Failed to delete workout:', error);
         alert('Failed to delete workout. Please try again.');
@@ -55,9 +77,40 @@ export default function GymLogPage() {
     }
   };
 
+  const handleDeleteFromPreview = () => {
+    if (previewWorkout) {
+      handleDeleteWorkout(previewWorkout.id);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingWorkout(undefined);
+    setPreviewWorkout(undefined);
+    setIsEditMode(false);
+  };
+
+  const renderModalContent = () => {
+    if (isEditMode) {
+      return (
+        <WorkoutForm
+          workout={editingWorkout}
+          onSave={handleSaveWorkout}
+          onClose={handleCloseModal}
+        />
+      );
+    }
+    if (previewWorkout) {
+      return (
+        <WorkoutPreview
+          workout={previewWorkout}
+          onEdit={handleEditFromPreview}
+          onDelete={handleDeleteFromPreview}
+          onClose={handleCloseModal}
+        />
+      );
+    }
+    return null;
   };
 
   if (isLoading) {
@@ -80,6 +133,7 @@ export default function GymLogPage() {
               <WorkoutCard
                 key={workout.id}
                 workout={workout}
+                onClick={() => handlePreviewWorkout(workout)}
                 onEdit={() => handleEditWorkout(workout)}
                 onDelete={() => handleDeleteWorkout(workout.id)}
               />
@@ -89,11 +143,7 @@ export default function GymLogPage() {
       </main>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <WorkoutForm
-          workout={editingWorkout}
-          onSave={handleSaveWorkout}
-          onClose={handleCloseModal}
-        />
+        {renderModalContent()}
       </Modal>
 
       <FloatingActionButton onClick={handleAddNew} />

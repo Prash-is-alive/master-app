@@ -9,11 +9,15 @@ interface WorkoutCardProps {
   readonly workout: WorkoutLog;
   readonly onEdit: () => void;
   readonly onDelete: () => void;
+  readonly onClick: () => void;
 }
 
-export default function WorkoutCard({ workout, onEdit, onDelete }: WorkoutCardProps) {
+export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: WorkoutCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+    <div 
+      className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow cursor-pointer"
+      onClick={onClick}
+    >
       <div className="flex justify-between items-start mb-4">
         <div>
           <div className="flex items-center gap-2 text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">
@@ -24,14 +28,20 @@ export default function WorkoutCard({ workout, onEdit, onDelete }: WorkoutCardPr
         </div>
         <div className="flex gap-1">
           <button
-            onClick={onEdit}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit();
+            }}
             className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
             aria-label="Edit"
           >
             <Edit2 size={18} />
           </button>
           <button
-            onClick={onDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
             className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             aria-label="Delete"
           >
