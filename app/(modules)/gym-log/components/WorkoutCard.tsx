@@ -1,9 +1,10 @@
 "use client"
 
-import React from 'react';
-import { Edit2, Trash2, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Edit2, Trash2, Calendar, Copy, Check } from 'lucide-react';
 import type { WorkoutLog } from '../types';
 import { formatDate } from '../utils';
+import { workoutToToon } from '../services/toon';
 
 interface WorkoutCardProps {
   readonly workout: WorkoutLog;
@@ -13,6 +14,20 @@ interface WorkoutCardProps {
 }
 
 export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: WorkoutCardProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const toonString = workoutToToon(workout);
+      await navigator.clipboard.writeText(toonString);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy workout:', error);
+    }
+  };
+
   return (
     <div 
       className="bg-[#111111] rounded-xl border border-[#333333] p-5 hover:bg-[#1a1a1a] hover:border-[#404040] transition-all cursor-pointer"
@@ -27,6 +42,13 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: Work
           <h3 className="text-lg font-bold text-[#ededed] capitalize">{workout.day}</h3>
         </div>
         <div className="flex gap-1">
+          <button
+            onClick={handleCopy}
+            className="p-2 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-colors"
+            aria-label="Copy to TOON format"
+          >
+            {copied ? <Check size={18} /> : <Copy size={18} />}
+          </button>
           <button
             onClick={(e) => {
               e.stopPropagation();
