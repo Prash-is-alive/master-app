@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useWorkouts } from './hooks/useWorkouts';
-import Modal from './components/Modal';
+import SlidePanel from './components/SlidePanel';
 import WorkoutForm from './components/WorkoutForm';
 import WorkoutPreview from './components/WorkoutPreview';
 import WorkoutCard from './components/WorkoutCard';
@@ -142,9 +142,9 @@ export default function GymLogPage() {
         )}
       </main>
 
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+      <SlidePanel isOpen={isModalOpen} onClose={handleCloseModal}>
         {renderModalContent()}
-      </Modal>
+      </SlidePanel>
 
       <FloatingActionButton onClick={handleAddNew} />
     </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, X, Save } from 'lucide-react';
+import { Plus, Trash2, X, Save, ArrowLeft } from 'lucide-react';
 import type { WorkoutLog, Exercise } from '../types';
 import { generateId } from '../utils';
 
@@ -33,7 +33,7 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
   const initialExercises = workout?.exercises 
     ? [...workout.exercises].reverse() 
     : (draft?.exercises || []);
-  const [date, setDate] = useState(workout?.date || draft?.date || new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(workout?.date || new Date().toISOString().split('T')[0]);
   const [day, setDay] = useState(workout?.day || draft?.day || '');
   const [exercises, setExercises] = useState<Exercise[]>(initialExercises);
 
@@ -141,8 +141,15 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
   return (
     <>
       {/* Sticky Header */}
-      <div className="px-6 py-4 border-b border-[#333333] flex justify-between items-center bg-[#111111] shrink-0">
-        <h2 className="text-xl md:text-2xl font-bold text-[#ededed]">
+      <div className="px-4 sm:px-6 py-4 border-b border-[#333333] flex items-center gap-3 bg-[#111111] shrink-0">
+        <button
+          onClick={onClose}
+          className="p-2 -ml-2 text-gray-400 hover:text-[#ededed] hover:bg-[#1a1a1a] rounded-lg transition-colors"
+          aria-label="Close"
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <h2 className="text-lg sm:text-xl font-bold text-[#ededed] flex-1">
           {workout ? 'Edit Workout' : 'Log Workout'}
         </h2>
         <div className="flex gap-1 items-center">
@@ -154,12 +161,12 @@ export default function WorkoutForm({ workout, onSave, onClose }: WorkoutFormPro
           >
             <Trash2 size={18} />
           </button>
-          <button 
-            type="button" 
-            onClick={onClose} 
-            className="p-2 -mr-2 text-gray-400 hover:text-[#ededed] hover:bg-[#1a1a1a] rounded-lg transition-colors"
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
           >
-            <X size={18} />
+            <Save size={16} />
+            <span className="hidden sm:inline">Save</span>
           </button>
         </div>
       </div>

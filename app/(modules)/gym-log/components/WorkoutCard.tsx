@@ -5,6 +5,7 @@ import { Edit2, Trash2, Calendar, Copy, Check } from 'lucide-react';
 import type { WorkoutLog } from '../types';
 import { formatDate } from '../utils';
 import { workoutToToon } from '../services/toon';
+import { copyToClipboard } from '@/lib/services/copy.service';
 
 interface WorkoutCardProps {
   readonly workout: WorkoutLog;
@@ -20,7 +21,7 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: Work
     e.stopPropagation();
     try {
       const toonString = workoutToToon(workout);
-      await navigator.clipboard.writeText(toonString);
+      await copyToClipboard(toonString);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
@@ -30,7 +31,7 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: Work
 
   return (
     <div 
-      className="bg-[#111111] rounded-xl border border-[#333333] p-5 hover:bg-[#1a1a1a] hover:border-[#404040] transition-all cursor-pointer"
+      className="group bg-[#111111] rounded-xl border border-[#333333] p-5 hover:bg-[#1a1a1a] hover:border-[#404040] transition-all cursor-pointer"
       onClick={onClick}
     >
       <div className="flex justify-between items-start mb-4">
@@ -41,7 +42,7 @@ export default function WorkoutCard({ workout, onEdit, onDelete, onClick }: Work
           </div>
           <h3 className="text-lg font-bold text-[#ededed] capitalize">{workout.day}</h3>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             onClick={handleCopy}
             className="p-2 text-gray-400 hover:text-green-400 hover:bg-green-500/10 rounded-lg transition-colors"
