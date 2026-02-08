@@ -1,10 +1,27 @@
 "use client"
 
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { Dumbbell, ArrowRight, Plus, Heart } from 'lucide-react';
 
 export default function Dashboard() {
   const router = useRouter();
+
+  // Check if sysadmin is logged in - redirect to sysadmin page
+  useEffect(() => {
+    const checkSysadmin = () => {
+      const cookies = document.cookie.split(';');
+      const hasSysadminAuth = cookies.some(cookie => 
+        cookie.trim().startsWith('sysadmin_token=')
+      );
+      
+      if (hasSysadminAuth) {
+        router.push('/sysadmin');
+      }
+    };
+
+    checkSysadmin();
+  }, [router]);
 
   const modules = [
     {

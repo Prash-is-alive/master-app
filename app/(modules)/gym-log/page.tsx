@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useWorkouts } from './hooks/useWorkouts';
 import SlidePanel from './components/SlidePanel';
 import WorkoutForm from './components/WorkoutForm';
@@ -11,11 +12,28 @@ import FloatingActionButton from './components/FloatingActionButton';
 import type { WorkoutLog } from './types';
 
 export default function GymLogPage() {
+  const router = useRouter();
   const { workouts, addWorkout, updateWorkout, deleteWorkout, isLoading } = useWorkouts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingWorkout, setEditingWorkout] = useState<WorkoutLog | undefined>(undefined);
   const [previewWorkout, setPreviewWorkout] = useState<WorkoutLog | undefined>(undefined);
   const [isEditMode, setIsEditMode] = useState(false);
+
+  // Check if sysadmin is logged in (should be caught by middleware, but double-check)
+  useEffect(() => {
+    const checkSysadmin = () => {
+      const cookies = document.cookie.split(';');
+      const hasSysadminAuth = cookies.some(cookie => 
+        cookie.trim().startsWith('sysadmin_token=')
+      );
+      
+      if (hasSysadminAuth) {
+        router.push('/unauthorized?message=Sysadmin users cannot access regular user pages. Please log out first.');
+      }
+    };
+
+    checkSysadmin();
+  }, [router]);
 
   const sortedWorkouts = useMemo(() => {
     return [...workouts].sort((a, b) =>

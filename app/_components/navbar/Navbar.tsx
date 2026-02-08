@@ -71,8 +71,8 @@ export default function Navbar() {
   // Get title and subtitle based on current path
   const { title, subtitle } = moduleTitles[pathname] || { title: 'Master App' };
 
-  // Don't show navbar on login page if not logged in
-  if (pathname === '/login' && !isLoggedIn) {
+  // Don't show navbar on login page or sysadmin pages
+  if ((pathname === '/login' && !isLoggedIn) || pathname.startsWith('/sysadmin')) {
     return null;
   }
 

@@ -7,8 +7,10 @@
 
 export { BaseService } from './base.service';
 export { UserService, userService } from './user.service';
+export { SysadminService, sysadminService } from './sysadmin.service';
 
 // Export types
 export type { User } from '../schemas/users';
+export type { Sysadmin } from '../schemas/sysadmin';
 export type { WorkoutLog, Exercise, Set } from '../schemas/gym-log';
 

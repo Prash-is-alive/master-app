@@ -114,6 +114,58 @@ export class UserService extends BaseService<User> {
   }
 
   /**
+   * Get all users (without passwords)
+   */
+  async getAllUsers(): Promise<Omit<User, 'password'>[]> {
+    const users = await this.findMany({}, { sort: { createdAt: -1 } } as any);
+    return users.map(user => this.getUserWithoutPassword(user));
+  }
+
+  /**
+   * Get user by ID (without password)
+   */
+  async getUserById(id: string): Promise<Omit<User, 'password'> | null> {
+    const user = await this.findById(id);
+    if (!user) return null;
+    return this.getUserWithoutPassword(user);
+  }
+
+  /**
+   * Update user profile (username, email)
+   */
+  async updateUser(
+    userId: string,
+    data: { username?: string; email?: string }
+  ): Promise<Omit<User, 'password'> | null> {
+    // Check for conflicts if username is changing
+    if (data.username) {
+      const existing = await this.findByUsername(data.username);
+      if (existing && existing._id !== userId) {
+        throw new Error('Username already exists');
+      }
+    }
+
+    // Check for conflicts if email is changing
+    if (data.email) {
+      const existing = await this.findByEmail(data.email);
+      if (existing && existing._id !== userId) {
+        throw new Error('Email already exists');
+      }
+    }
+
+    const updated = await this.updateById(userId, data as any);
+    if (!updated) return null;
+    return this.getUserWithoutPassword(updated);
+  }
+
+  /**
+   * Delete user by ID
+   */
+  async deleteUser(userId: string): Promise<boolean> {
+    return this.deleteById(userId);
+  }
+
+  /**
    * Get user without password
    */
   getUserWithoutPassword(user: User): Omit<User, 'password'> {
