@@ -55,8 +55,8 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           <div className="w-16 h-16 rounded-2xl bg-purple-600/20 flex items-center justify-center mx-auto mb-4">
             <Shield size={32} className="text-purple-400" />
           </div>
-          <h1 className="text-2xl font-bold text-[#ededed]">Sysadmin</h1>
-          <p className="text-sm text-gray-400 mt-1">Sign in with your admin credentials</p>
+          <h1 className="text-2xl font-bold text-[#ededed]">ADMIN</h1>
+          <p className="text-sm text-gray-400 mt-1">Login as System Administrator</p>
         </div>
 
         {/* Form */}

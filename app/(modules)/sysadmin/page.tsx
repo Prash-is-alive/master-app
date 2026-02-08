@@ -155,7 +155,7 @@ function SysadminDashboard({ onLogout }: SysadminDashboardProps) {
               <Users size={20} className="text-purple-400" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-[#ededed]">User Management</h2>
+              <h2 className="text-xl font-bold text-[#ededed]">Users</h2>
               <p className="text-sm text-gray-400">
                 {users.length} user{users.length === 1 ? '' : 's'} total
               </p>
