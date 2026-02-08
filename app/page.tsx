@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Dumbbell, ArrowRight, Plus, Heart } from 'lucide-react';
+import { AUTH_COOKIES, ROUTES } from '@/lib/constants';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -12,11 +13,11 @@ export default function Dashboard() {
     const checkSysadmin = () => {
       const cookies = document.cookie.split(';');
       const hasSysadminAuth = cookies.some(cookie => 
-        cookie.trim().startsWith('sysadmin_token=')
+        cookie.trim().startsWith(`${AUTH_COOKIES.SYSADMIN_TOKEN}=`)
       );
       
       if (hasSysadminAuth) {
-        router.push('/sysadmin');
+        router.push(ROUTES.SYSADMIN);
       }
     };
 
@@ -31,7 +32,7 @@ export default function Dashboard() {
       icon: <Dumbbell size={24} className="text-white" />,
       color: 'bg-blue-600',
       hoverColor: 'group-hover:text-blue-600',
-      link: '/gym-log',
+      link: ROUTES.GYM_LOG,
       active: true
     },
     {

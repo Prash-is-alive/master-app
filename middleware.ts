@@ -1,20 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-const AUTH_COOKIES = {
-  USER_TOKEN: 'auth_token',
-  USER_ID: 'user_id',
-  SYSADMIN_TOKEN: 'sysadmin_token',
-  SYSADMIN_ID: 'sysadmin_id',
-} as const;
-
-const ROUTES = {
-  LOGIN: '/login',
-  HOME: '/',
-  SYSADMIN: '/sysadmin',
-  UNAUTHORIZED: '/unauthorized',
-  API: '/api',
-} as const;
+import { AUTH_COOKIES, ROUTES } from '@/lib/constants';
 
 interface AuthCookies {
   authToken?: string;

@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { UserRecord, CreateUserPayload, UpdateUserPayload } from '../types';
+import { API_ENDPOINTS } from '@/lib/constants';
 
-const API_BASE = '/api/sysadmin/users';
+const API_BASE = API_ENDPOINTS.SYSADMIN.USERS;
 
 export function useUsers() {
   const [users, setUsers] = useState<UserRecord[]>([]);

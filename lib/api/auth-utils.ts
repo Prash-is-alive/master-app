@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { userService } from '@/lib/db/services';
 import type { User } from '@/lib/db/schemas/users';
+import { AUTH_COOKIES, AUTH_TOKENS } from '@/lib/constants';
 
 /**
  * Get the current authenticated user from the request
@@ -9,14 +10,14 @@ import type { User } from '@/lib/db/schemas/users';
 export async function getCurrentUser(request: NextRequest): Promise<Omit<User, 'password'> | null> {
   try {
     // Get auth token from cookie
-    const authToken = request.cookies.get('auth_token')?.value;
+    const authToken = request.cookies.get(AUTH_COOKIES.USER_TOKEN)?.value;
     
-    if (!authToken || authToken !== 'valid_token') {
+    if (!authToken || authToken !== AUTH_TOKENS.USER_VALID) {
       return null;
     }
 
     // Get userId from user_id cookie (set during login)
-    const userId = request.cookies.get('user_id')?.value;
+    const userId = request.cookies.get(AUTH_COOKIES.USER_ID)?.value;
     
     if (!userId) {
       return null;
@@ -42,8 +43,8 @@ export async function getCurrentUser(request: NextRequest): Promise<Omit<User, '
  * Check if user is authenticated
  */
 export function isAuthenticated(request: NextRequest): boolean {
-  const authToken = request.cookies.get('auth_token')?.value;
-  const userId = request.cookies.get('user_id')?.value;
-  return authToken === 'valid_token' && !!userId;
+  const authToken = request.cookies.get(AUTH_COOKIES.USER_TOKEN)?.value;
+  const userId = request.cookies.get(AUTH_COOKIES.USER_ID)?.value;
+  return authToken === AUTH_TOKENS.USER_VALID && !!userId;
 }
 

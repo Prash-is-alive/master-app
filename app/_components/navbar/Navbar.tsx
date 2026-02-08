@@ -4,12 +4,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Home } from 'lucide-react';
 import UserMenu from './UserMenu';
+import { AUTH_COOKIES, AUTH_TOKENS, ROUTES, API_ENDPOINTS } from '@/lib/constants';
 
 // Module title mapping
 const moduleTitles: Record<string, { title: string; subtitle?: string }> = {
-  '/': { title: 'Master App' },
-  '/gym-log': { title: 'Gym Logger', subtitle: 'Track your progress' },
-  '/login': { title: 'Master App' },
+  [ROUTES.HOME]: { title: 'Master App' },
+  [ROUTES.GYM_LOG]: { title: 'Gym Logger', subtitle: 'Track your progress' },
+  [ROUTES.LOGIN]: { title: 'Master App' },
 };
 
 export default function Navbar() {
@@ -23,12 +24,12 @@ export default function Navbar() {
     const checkAuth = () => {
       const cookies = document.cookie.split(';');
       const authCookie = cookies.find(cookie => 
-        cookie.trim().startsWith('auth_token=')
+        cookie.trim().startsWith(`${AUTH_COOKIES.USER_TOKEN}=`)
       );
       
       if (authCookie) {
         const tokenValue = authCookie.split('=')[1]?.trim();
-        setIsLoggedIn(tokenValue === 'valid_token');
+        setIsLoggedIn(tokenValue === AUTH_TOKENS.USER_VALID);
       } else {
         setIsLoggedIn(false);
         setUsername(null);
@@ -46,7 +47,7 @@ export default function Navbar() {
     if (isLoggedIn && !username) {
       const fetchUsername = async () => {
         try {
-          const response = await fetch('/api/auth/me');
+          const response = await fetch(API_ENDPOINTS.AUTH.ME);
           if (response.ok) {
             const data = await response.json();
             setUsername(data.user?.username || null);
@@ -63,16 +64,16 @@ export default function Navbar() {
 
 
   const handleHome = () => {
-    router.push('/');
+    router.push(ROUTES.HOME);
   };
 
-  const isHomePage = pathname === '/';
+  const isHomePage = pathname === ROUTES.HOME;
 
   // Get title and subtitle based on current path
   const { title, subtitle } = moduleTitles[pathname] || { title: 'Master App' };
 
   // Don't show navbar on login page or sysadmin pages
-  if ((pathname === '/login' && !isLoggedIn) || pathname.startsWith('/sysadmin')) {
+  if ((pathname === ROUTES.LOGIN && !isLoggedIn) || pathname.startsWith(ROUTES.SYSADMIN)) {
     return null;
   }
 

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Dumbbell, Lock, User, ArrowRight } from 'lucide-react';
+import { Lock, User, ArrowRight } from 'lucide-react';
 import { login } from '@/lib/api/auth';
 
 export default function LoginPage() {
@@ -40,9 +40,6 @@ export default function LoginPage() {
         
         {/* Header Section */}
         <div className="bg-blue-600 p-8 text-center">
-          <div className="bg-white/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-            <Dumbbell size={32} className="text-white" />
-          </div>
           <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
           <p className="text-blue-100 text-sm mt-1">Sign in to access your Master App</p>
         </div>
@@ -89,7 +86,7 @@ export default function LoginPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   className="w-full pl-10 pr-4 py-3 border border-[#333333] rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-black text-[#ededed] placeholder-gray-500 transition-all outline-none"
                   required
                 />

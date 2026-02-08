@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Lock, Eye, EyeOff } from 'lucide-react';
+import { AUTH_COOKIES, COOKIE_DELETE_VALUE, ROUTES, API_ENDPOINTS } from '@/lib/constants';
 
 interface ChangePasswordModalProps {
   readonly isOpen: boolean;
@@ -46,7 +47,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/change-password', {
+      const response = await fetch(API_ENDPOINTS.AUTH.CHANGE_PASSWORD, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,9 +78,9 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
       alert('Password changed successfully! Please log in again with your new password.');
       
       // Clear auth cookies and redirect to login
-      document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-      document.cookie = "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-      router.push('/login');
+      document.cookie = `${AUTH_COOKIES.USER_TOKEN}=${COOKIE_DELETE_VALUE}`;
+      document.cookie = `${AUTH_COOKIES.USER_ID}=${COOKIE_DELETE_VALUE}`;
+      router.push(ROUTES.LOGIN);
     } catch (err) {
       console.error('Error changing password:', err);
       setError('An unexpected error occurred. Please try again.');

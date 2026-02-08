@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, RefreshCw, Users, LogOut } from 'lucide-react';
+import { AUTH_COOKIES, COOKIE_DELETE_VALUE, ROUTES, API_ENDPOINTS } from '@/lib/constants';
 import { useUsers } from './hooks/useUsers';
 import UserTable from './components/UserTable';
 import UserForm from './components/UserForm';
@@ -23,11 +24,11 @@ export default function SysadminPage() {
     const checkRegularUser = () => {
       const cookies = document.cookie.split(';');
       const hasRegularAuth = cookies.some(cookie => 
-        cookie.trim().startsWith('auth_token=')
+        cookie.trim().startsWith(`${AUTH_COOKIES.USER_TOKEN}=`)
       );
       
       if (hasRegularAuth) {
-        router.push('/unauthorized');
+        router.push(ROUTES.UNAUTHORIZED);
       }
     };
 
@@ -37,7 +38,7 @@ export default function SysadminPage() {
   // Check if already authenticated as sysadmin
   const checkAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/sysadmin/auth/me');
+      const response = await fetch(API_ENDPOINTS.SYSADMIN.AUTH.ME);
       setAuthState(response.ok ? 'authenticated' : 'unauthenticated');
     } catch {
       setAuthState('unauthenticated');
@@ -53,8 +54,8 @@ export default function SysadminPage() {
   };
 
   const handleLogout = () => {
-    document.cookie = 'sysadmin_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-    document.cookie = 'sysadmin_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
+    document.cookie = `${AUTH_COOKIES.SYSADMIN_TOKEN}=${COOKIE_DELETE_VALUE}`;
+    document.cookie = `${AUTH_COOKIES.SYSADMIN_ID}=${COOKIE_DELETE_VALUE}`;
     setAuthState('unauthenticated');
   };
 

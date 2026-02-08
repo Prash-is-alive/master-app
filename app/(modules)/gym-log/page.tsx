@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWorkouts } from './hooks/useWorkouts';
+import { AUTH_COOKIES, ROUTES } from '@/lib/constants';
 import SlidePanel from './components/SlidePanel';
 import WorkoutForm from './components/WorkoutForm';
 import WorkoutPreview from './components/WorkoutPreview';
@@ -24,11 +25,11 @@ export default function GymLogPage() {
     const checkSysadmin = () => {
       const cookies = document.cookie.split(';');
       const hasSysadminAuth = cookies.some(cookie => 
-        cookie.trim().startsWith('sysadmin_token=')
+        cookie.trim().startsWith(`${AUTH_COOKIES.SYSADMIN_TOKEN}=`)
       );
       
       if (hasSysadminAuth) {
-        router.push('/unauthorized?message=Sysadmin users cannot access regular user pages. Please log out first.');
+        router.push(`${ROUTES.UNAUTHORIZED}?message=Sysadmin users cannot access regular user pages. Please log out first.`);
       }
     };
 

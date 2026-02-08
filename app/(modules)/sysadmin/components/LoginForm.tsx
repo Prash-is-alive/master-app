@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Shield, Loader2, LogIn } from 'lucide-react';
+import { API_ENDPOINTS } from '@/lib/constants';
 
 interface LoginFormProps {
   readonly onSuccess: () => void;
@@ -25,7 +26,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     try {
       setIsLoading(true);
 
-      const response = await fetch('/api/sysadmin/auth/login', {
+      const response = await fetch(API_ENDPOINTS.SYSADMIN.AUTH.LOGIN, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: username.trim(), password }),

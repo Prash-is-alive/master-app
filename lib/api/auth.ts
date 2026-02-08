@@ -11,13 +11,14 @@ import type {
   RegisterData,
   RegisterResponse,
 } from './types/auth-types';
+import { AUTH_COOKIES, AUTH_TOKENS, COOKIE_DELETE_VALUE, ROUTES, API_ENDPOINTS } from '@/lib/constants';
 
 /**
  * Login user
  */
 export async function login(credentials: LoginCredentials): Promise<LoginResponse> {
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +57,7 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
  */
 export async function register(data: RegisterData): Promise<RegisterResponse> {
   try {
-    const response = await fetch('/api/users', {
+    const response = await fetch(API_ENDPOINTS.USERS, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,9 +92,9 @@ export async function register(data: RegisterData): Promise<RegisterResponse> {
  */
 export function logout(): void {
   // Clear all auth cookies
-  document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-  document.cookie = 'user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-  globalThis.window.location.href = '/login';
+  document.cookie = `${AUTH_COOKIES.USER_TOKEN}=${COOKIE_DELETE_VALUE}`;
+  document.cookie = `${AUTH_COOKIES.USER_ID}=${COOKIE_DELETE_VALUE}`;
+  globalThis.window.location.href = ROUTES.LOGIN;
 }
 
 /**
@@ -104,9 +105,9 @@ export function isAuthenticated(): boolean {
   
   const cookies = globalThis.document.cookie.split(';');
   const authCookie = cookies.find(cookie => 
-    cookie.trim().startsWith('auth_token=')
+    cookie.trim().startsWith(`${AUTH_COOKIES.USER_TOKEN}=`)
   );
   
-  return authCookie?.includes('valid_token') || false;
+  return authCookie?.includes(AUTH_TOKENS.USER_VALID) || false;
 }
 

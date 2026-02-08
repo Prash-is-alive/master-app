@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { LogOut, Key, User, ChevronDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ChangePasswordModal from './ChangePasswordModal';
+import { AUTH_COOKIES, COOKIE_DELETE_VALUE, ROUTES } from '@/lib/constants';
 
 interface UserMenuProps {
   readonly username: string;
@@ -34,9 +35,9 @@ export default function UserMenu({ username }: UserMenuProps) {
 
   const handleLogout = () => {
     // Clear all auth cookies
-    document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-    document.cookie = "user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT";
-    router.push('/login');
+    document.cookie = `${AUTH_COOKIES.USER_TOKEN}=${COOKIE_DELETE_VALUE}`;
+    document.cookie = `${AUTH_COOKIES.USER_ID}=${COOKIE_DELETE_VALUE}`;
+    router.push(ROUTES.LOGIN);
   };
 
   const handleChangePassword = () => {

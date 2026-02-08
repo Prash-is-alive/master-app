@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sysadminService } from '@/lib/db/services/sysadmin.service';
 import type { Sysadmin } from '@/lib/db/schemas/sysadmin';
-
-const COOKIE_NAME = 'sysadmin_token';
-const COOKIE_ID = 'sysadmin_id';
-const TOKEN_VALUE = 'sysadmin_valid';
+import { AUTH_COOKIES, AUTH_TOKENS } from '@/lib/constants';
 
 /**
  * Get the current authenticated sysadmin from the request.
@@ -14,10 +11,10 @@ export async function getCurrentSysadmin(
   request: NextRequest
 ): Promise<Omit<Sysadmin, 'password'> | null> {
   try {
-    const token = request.cookies.get(COOKIE_NAME)?.value;
-    const adminId = request.cookies.get(COOKIE_ID)?.value;
+    const token = request.cookies.get(AUTH_COOKIES.SYSADMIN_TOKEN)?.value;
+    const adminId = request.cookies.get(AUTH_COOKIES.SYSADMIN_ID)?.value;
 
-    if (token !== TOKEN_VALUE || !adminId) {
+    if (token !== AUTH_TOKENS.SYSADMIN_VALID || !adminId) {
       return null;
     }
 
@@ -51,9 +48,4 @@ export async function requireSysadmin(
 
   return admin;
 }
-
-/**
- * Cookie config constants – exported so login route can use them.
- */
-export { COOKIE_NAME, COOKIE_ID, TOKEN_VALUE };
 

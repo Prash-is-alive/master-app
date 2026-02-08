@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sysadminService } from '@/lib/db/services/sysadmin.service';
-import { COOKIE_NAME, COOKIE_ID, TOKEN_VALUE } from '@/lib/api/sysadmin-auth';
+import { AUTH_COOKIES, AUTH_TOKENS, COOKIE_CONFIG } from '@/lib/constants';
 
 /**
  * POST /api/sysadmin/auth/login
@@ -32,19 +32,19 @@ export async function POST(request: NextRequest) {
     });
 
     // Set sysadmin-specific cookies (separate from regular auth)
-    response.cookies.set(COOKIE_NAME, TOKEN_VALUE, {
-      path: '/',
-      maxAge: 3600, // 1 hour – short-lived for security
-      httpOnly: false,
-      sameSite: 'strict',
+    response.cookies.set(AUTH_COOKIES.SYSADMIN_TOKEN, AUTH_TOKENS.SYSADMIN_VALID, {
+      path: COOKIE_CONFIG.PATH,
+      maxAge: COOKIE_CONFIG.EXPIRATION.SYSADMIN,
+      httpOnly: COOKIE_CONFIG.HTTP_ONLY,
+      sameSite: COOKIE_CONFIG.SAME_SITE,
     });
 
     if (result.admin._id) {
-      response.cookies.set(COOKIE_ID, String(result.admin._id), {
-        path: '/',
-        maxAge: 3600,
-        httpOnly: false,
-        sameSite: 'strict',
+      response.cookies.set(AUTH_COOKIES.SYSADMIN_ID, String(result.admin._id), {
+        path: COOKIE_CONFIG.PATH,
+        maxAge: COOKIE_CONFIG.EXPIRATION.SYSADMIN,
+        httpOnly: COOKIE_CONFIG.HTTP_ONLY,
+        sameSite: COOKIE_CONFIG.SAME_SITE,
       });
     }
 
